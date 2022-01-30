@@ -1,7 +1,11 @@
+import logging
+
 from gevent.socket import wait_read, wait_write
 from psycopg2 import extensions
 
-from models import db, Clavis, Secrets, Audit
+from clavis.db.models import db, Clavis, Secrets, Audit
+
+logger = logging.getLogger("clavis")
 
 def patch_psycopg2():
     extensions.set_wait_callback(_psycopg2_gevent_callback)

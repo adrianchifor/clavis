@@ -1,8 +1,10 @@
-arrpc==0.5.0
-peewee==3.14.8
-pykube-ng==22.1.0
-jsonschema==4.4.0
+arrpc>=0.5.0
+peewee>=3.14.8
+pykube-ng>=22.1.0
+click>=8.0.3
+jsonschema>=4.4.0
 cryptography>=36.0.1
+psycopg2-binary>=2.9.3
 
 # 3rd party KMS
-google-cloud-kms==2.10.1
+google-cloud-kms>=2.10.1
