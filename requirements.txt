@@ -1,2 +1,8 @@
-fastapi==0.73.0
-uvicorn[standard]==0.17.1
+arrpc==0.5.0
+peewee==3.14.8
+pykube-ng==22.1.0
+jsonschema==4.4.0
+cryptography>=36.0.1
+
+# 3rd party KMS
+google-cloud-kms==2.10.1
