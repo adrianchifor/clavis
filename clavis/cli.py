@@ -1,8 +1,10 @@
 import arrpc
 import logging
+import secrets as pysecrets
 import click
 import clavis.db.ops as db
 import clavis.version as v
+import clavis.crypto.shamir as shamir
 
 logger = logging.getLogger("clavis")
 
@@ -27,6 +29,12 @@ def server(verbose):
     db.patch_psycopg2()
     db.connect()
     click.echo('Running clavis server')
+
+    secret = pysecrets.token_hex(64)
+    click.echo(f"secret: {hex(int(secret, base=16))}")
+    shares = shamir.make_random_shares(int(secret, base=16), minimum=3, shares=5)
+    click.echo(f"shares: {shares}")
+    click.echo(f"recovered: {hex(shamir.recover_secret(shares[:3]))}")
 
 @cli.command()
 def keystore_init():
