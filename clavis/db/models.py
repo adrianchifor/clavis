@@ -11,7 +11,8 @@ class BaseModel(pw.Model):
         database = db
 
 class Clavis(BaseModel):
-    root_key = pw.TextField(null=True)
+    root_key = pw.TextField()
+    seal_key = pw.TextField(null=True)
     tls_key = pw.TextField()
     tls_cert = pw.TextField()
     integrity_secret = pw.TextField()
