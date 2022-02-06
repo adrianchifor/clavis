@@ -128,5 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# sqlite
+# local testing
 *.db
+tls.key
+tls.crt
+integrity

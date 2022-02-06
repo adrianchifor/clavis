@@ -1,10 +1,13 @@
 import arrpc
 import logging
+import sys
 import secrets as pysecrets
 import click
 import clavis.db.ops as db
+import clavis.rpc.methods as rpc
 import clavis.version as v
 import clavis.crypto.shamir as shamir
+from clavis.errors import ClavisFatalException
 
 logger = logging.getLogger("clavis")
 
@@ -22,7 +25,8 @@ def version():
 
 @cli.command()
 @click.option("--verbose", default=False, is_flag=True, help="Show debug logs")
-def server(verbose):
+@click.option("--gcp-kms", help="GCP KMS key to use for auto unseal")
+def server(verbose, gcp_kms):
     """Run keystore server"""
     if verbose:
         logger.setLevel(logging.DEBUG)
@@ -30,16 +34,26 @@ def server(verbose):
     db.connect()
     click.echo('Running clavis server')
 
-    secret = pysecrets.token_hex(64)
-    click.echo(f"secret: {hex(int(secret, base=16))}")
-    shares = shamir.make_random_shares(int(secret, base=16), minimum=3, shares=5)
-    click.echo(f"shares: {shares}")
-    click.echo(f"recovered: {hex(shamir.recover_secret(shares[:3]))}")
+    try:
+        rpc.run_server(gcp_kms)
+    except ClavisFatalException:
+        sys.exit(1)
+
+    # secret = pysecrets.token_hex(64)
+    # click.echo(f"secret: {hex(int(secret, base=16))}")
+    # shares = shamir.make_random_shares(int(secret, base=16), minimum=3, shares=5)
+    # click.echo(f"shares: {shares}")
+    # click.echo(f"recovered: {hex(shamir.recover_secret(shares[:3]))}")
 
 @cli.command()
 def keystore_init():
-    """Initialize keystore Shamir key shares (run on server)"""
+    """Initialize Shamir key shares (run on server)"""
     click.echo('Init server keystore')
+
+@cli.command()
+def keystore_unseal():
+    """Unseal manually with Shamir key shares (run on server)"""
+    click.echo('Unsealed server keystore')
 
 @cli.command()
 def configure():
@@ -75,11 +89,3 @@ def read():
 def update():
     """Update a secret"""
     click.echo('Updated secret')
-
-# def rpc_handler(request):
-#     return ""
-
-# server = arrpc.Server("0.0.0.0", 8443, rpc_handler, metrics=True,
-#                       tls_certfile="tls.crt", tls_keyfile="tls.key",
-#                       auth_secret="")
-# server.start()

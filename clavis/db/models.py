@@ -13,9 +13,6 @@ class BaseModel(pw.Model):
 class Clavis(BaseModel):
     root_key = pw.TextField()
     seal_key = pw.TextField(null=True)
-    tls_key = pw.TextField()
-    tls_cert = pw.TextField()
-    integrity_secret = pw.TextField()
     created_at = pw.DateTimeField(default=datetime.datetime.now)
 
 class Secrets(BaseModel):
