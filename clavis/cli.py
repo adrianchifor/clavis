@@ -8,6 +8,7 @@ import clavis.rpc.methods as rpc
 import clavis.version as v
 import clavis.crypto.shamir as shamir
 from clavis.errors import ClavisFatalException
+import clavis.kube.auth as auth
 
 logger = logging.getLogger("clavis")
 
@@ -51,13 +52,19 @@ def server(verbose, gcp_kms):
 
 @cli.command()
 def keystore_init():
-    """Initialize Shamir key shares (run on server)"""
+    """Initialize Shamir key shares"""
     click.echo("Init server keystore")
 
 
 @cli.command()
+def keystore_rekey():
+    """Re-generate Shamir key shares"""
+    click.echo("Rekey server keystore")
+
+
+@cli.command()
 def keystore_unseal():
-    """Unseal manually with Shamir key shares (run on server)"""
+    """Unseal manually with Shamir key shares"""
     click.echo("Unsealed server keystore")
 
 

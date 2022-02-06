@@ -15,6 +15,7 @@ class BaseModel(pw.Model):
 class Clavis(BaseModel):
     root_key = pw.TextField()
     seal_key = pw.TextField(null=True)
+    seal_min_shares = pw.IntegerField()
     created_at = pw.DateTimeField(default=datetime.datetime.now)
 
 
