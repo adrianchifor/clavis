@@ -7,8 +7,10 @@ from clavis.db.models import db, Clavis, Secrets, Audit
 
 logger = logging.getLogger("clavis")
 
+
 def patch_psycopg2():
     extensions.set_wait_callback(_psycopg2_gevent_callback)
+
 
 def _psycopg2_gevent_callback(conn, timeout=None):
     while True:
@@ -20,7 +22,8 @@ def _psycopg2_gevent_callback(conn, timeout=None):
         elif state == extensions.POLL_WRITE:
             wait_write(conn.fileno(), timeout=timeout)
         else:
-            raise ValueError('poll() returned unexpected result')
+            raise ValueError("poll() returned unexpected result")
+
 
 def connect():
     db.connect(reuse_if_open=True)

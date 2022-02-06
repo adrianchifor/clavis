@@ -2,9 +2,10 @@ import random
 import functools
 
 # 13th Mersenne Prime
-_PRIME = 2 ** 521 - 1
+_PRIME = 2**521 - 1
 
 _RINT = functools.partial(random.SystemRandom().randint, 0)
+
 
 def _eval_at(poly, x, prime):
     """Evaluates polynomial (coefficient tuple) at x, used to generate a
@@ -17,6 +18,7 @@ def _eval_at(poly, x, prime):
         accum %= prime
     return accum
 
+
 def make_random_shares(secret, minimum, shares, prime=_PRIME):
     """
     Generates a random shamir pool for a given secret, returns share points.
@@ -24,9 +26,9 @@ def make_random_shares(secret, minimum, shares, prime=_PRIME):
     if minimum > shares:
         raise ValueError("Pool secret would be irrecoverable.")
     poly = [secret] + [_RINT(prime - 1) for i in range(minimum - 1)]
-    points = [(i, _eval_at(poly, i, prime))
-              for i in range(1, shares + 1)]
+    points = [(i, _eval_at(poly, i, prime)) for i in range(1, shares + 1)]
     return points
+
 
 def _extended_gcd(a, b):
     """
@@ -47,6 +49,7 @@ def _extended_gcd(a, b):
         y, last_y = last_y - quot * y, y
     return last_x, last_y
 
+
 def _divmod(num, den, p):
     """Compute num / den modulo prime p
 
@@ -56,6 +59,7 @@ def _divmod(num, den, p):
     inv, _ = _extended_gcd(den, p)
     return num * inv
 
+
 def _lagrange_interpolate(x, x_s, y_s, p):
     """
     Find the y-value for the given x, given n (x, y) points;
@@ -63,11 +67,13 @@ def _lagrange_interpolate(x, x_s, y_s, p):
     """
     k = len(x_s)
     assert k == len(set(x_s)), "points must be distinct"
+
     def PI(vals):  # upper-case PI -- product of inputs
         accum = 1
         for v in vals:
             accum *= v
         return accum
+
     nums = []  # avoid inexact division
     dens = []
     for i in range(k):
@@ -76,9 +82,9 @@ def _lagrange_interpolate(x, x_s, y_s, p):
         nums.append(PI(x - o for o in others))
         dens.append(PI(cur - o for o in others))
     den = PI(dens)
-    num = sum([_divmod(nums[i] * den * y_s[i] % p, dens[i], p)
-               for i in range(k)])
+    num = sum([_divmod(nums[i] * den * y_s[i] % p, dens[i], p) for i in range(k)])
     return (_divmod(num, den, p) + p) % p
+
 
 def recover_secret(shares, prime=_PRIME):
     """

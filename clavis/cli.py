@@ -11,6 +11,7 @@ from clavis.errors import ClavisFatalException
 
 logger = logging.getLogger("clavis")
 
+
 @click.group()
 @click.option("--verbose", default=False, is_flag=True, help="Show debug logs")
 def cli(verbose):
@@ -18,10 +19,12 @@ def cli(verbose):
     if verbose:
         logger.setLevel(logging.DEBUG)
 
+
 @cli.command()
 def version():
     """Show version"""
     click.echo(f"Clavis version {v.version}")
+
 
 @cli.command()
 @click.option("--verbose", default=False, is_flag=True, help="Show debug logs")
@@ -32,7 +35,7 @@ def server(verbose, gcp_kms):
         logger.setLevel(logging.DEBUG)
     db.patch_psycopg2()
     db.connect()
-    click.echo('Running clavis server')
+    click.echo("Running clavis server")
 
     try:
         rpc.run_server(gcp_kms)
@@ -45,47 +48,56 @@ def server(verbose, gcp_kms):
     # click.echo(f"shares: {shares}")
     # click.echo(f"recovered: {hex(shamir.recover_secret(shares[:3]))}")
 
+
 @cli.command()
 def keystore_init():
     """Initialize Shamir key shares (run on server)"""
-    click.echo('Init server keystore')
+    click.echo("Init server keystore")
+
 
 @cli.command()
 def keystore_unseal():
     """Unseal manually with Shamir key shares (run on server)"""
-    click.echo('Unsealed server keystore')
+    click.echo("Unsealed server keystore")
+
 
 @cli.command()
 def configure():
     """Configure CLI options (server URL, TLS cert, integrity key)"""
-    click.echo('Configuring CLI')
+    click.echo("Configuring CLI")
+
 
 @cli.group()
 def secrets():
     """Interact with server keystore as a client"""
     pass
 
+
 @secrets.command()
 def create():
     """Create a secret"""
-    click.echo('Created secret')
+    click.echo("Created secret")
+
 
 @secrets.command()
 def delete():
     """Delete a secret"""
-    click.echo('Deleted secret')
+    click.echo("Deleted secret")
+
 
 @secrets.command()
 def list():
     """List secrets"""
-    click.echo('Listed secrets')
+    click.echo("Listed secrets")
+
 
 @secrets.command()
 def read():
     """Read a secret (for k8s service accounts, not users)"""
-    click.echo('Reading secret')
+    click.echo("Reading secret")
+
 
 @secrets.command()
 def update():
     """Update a secret"""
-    click.echo('Updated secret')
+    click.echo("Updated secret")

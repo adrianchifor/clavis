@@ -11,6 +11,7 @@ def _rpc_handler(request):
     logger.info(request)
     return "pong"
 
+
 def run_server(gcp_kms: str):
     addr = "127.0.0.1"
     rpc_sec_path = "."
@@ -20,9 +21,11 @@ def run_server(gcp_kms: str):
         rpc_sec_path = "/rpc"
 
     arrpc.Server(
-        addr, 8443, _rpc_handler, metrics=True,
+        addr,
+        8443,
+        _rpc_handler,
+        metrics=True,
         tls_keyfile=f"{rpc_sec_path}/tls.key",
-        tls_certfile=f"{rpc_sec_path}/tls.crt", 
-        auth_secret=get_or_create_rpc_security(rpc_sec_path)
+        tls_certfile=f"{rpc_sec_path}/tls.crt",
+        auth_secret=get_or_create_rpc_security(rpc_sec_path),
     ).start()
-
